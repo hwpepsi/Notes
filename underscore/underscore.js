@@ -1658,6 +1658,7 @@
     };
   
     // Add a "chain" function. Start chaining a wrapped Underscore object.
+    /* 添加一个链式函数，开始链式调用一个包装的underscore对象 */
     _.chain = function(obj) {
       var instance = _(obj);
       instance._chain = true;
@@ -1671,11 +1672,16 @@
     // underscore functions. Wrapped objects may be chained.
   
     // Helper function to continue chaining intermediate results.
+    /*
+    * underscore 作为函数调用时，它会返回一个包装对象，可以作为面向对象编程
+    * 这个包装对象拥有underscore所有变异版本的方法，也可以链式调用
+    */
     var chainResult = function(instance, obj) {
       return instance._chain ? _(obj).chain() : obj;
     };
   
     // Add your own custom functions to the Underscore object.
+    /* 给underscore添加自定义的方法 */
     _.mixin = function(obj) {
       _.each(_.functions(obj), function(name) {
         var func = _[name] = obj[name];
@@ -1689,9 +1695,11 @@
     };
   
     // Add all of the Underscore functions to the wrapper object.
+    /* 将所有的underscore方法添加到包装对象上 */
     _.mixin(_);
   
     // Add all mutator Array functions to the wrapper.
+    /* 将所有的设置数组方法添加到包装对象上 */
     _.each(['pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift'], function(name) {
       var method = ArrayProto[name];
       _.prototype[name] = function() {
@@ -1703,6 +1711,7 @@
     });
   
     // Add all accessor Array functions to the wrapper.
+    /* 给包装对象添加所有的存储器数组方法 */
     _.each(['concat', 'join', 'slice'], function(name) {
       var method = ArrayProto[name];
       _.prototype[name] = function() {
@@ -1711,12 +1720,14 @@
     });
   
     // Extracts the result from a wrapped and chained object.
+    /* 从包装的和链式对象中提取结果 */
     _.prototype.value = function() {
       return this._wrapped;
     };
   
     // Provide unwrapping proxy for some methods used in engine operations
     // such as arithmetic and JSON stringification.
+    /*  */
     _.prototype.valueOf = _.prototype.toJSON = _.prototype.value;
   
     _.prototype.toString = function() {
@@ -1730,6 +1741,7 @@
     // popular enough to be bundled in a third party lib, but not be part of
     // an AMD load request. Those cases could generate an error when an
     // anonymous define() is called outside of a loader request.
+    /* 兼容AMD规范的模块化工具 */
     if (typeof define == 'function' && define.amd) {
       define('underscore', [], function() {
         return _;
